@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
         - name: test
-          image: nexus.docker.com/nginx:v2
+          image: nexus.docker.com/nginx:v1
       imagePullSecrets:
          - name: regcred

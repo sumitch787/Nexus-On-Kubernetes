@@ -36,11 +36,11 @@ spec:
               mountPath: "/nexus-data"
       volumes:
         - name: nexus-data
-          hostPath:
-            path: /tmp/nexus-data
-            type: DirectoryOrCreate
-          # persistentVolumeClaim:
-          #   claimName: nexus-pvc
+          # hostPath:
+          #   path: /tmp/nexus-data
+          #   type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: nexus-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment

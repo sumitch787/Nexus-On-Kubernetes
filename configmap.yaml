@@ -14,7 +14,7 @@ data:
 
     server {
         listen 8080;
-        listen 4430 ssl default_server;
+        listen 4430 ssl;
         server_name nexus.local.com nexus.docker.com;
 
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;

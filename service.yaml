@@ -22,9 +22,9 @@ spec:
   selector:
     name: nginx-web
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 8080
       name: nginx-http
-    - port: 443
+    - port: 4430
       targetPort: 4430
       name: nginx-https

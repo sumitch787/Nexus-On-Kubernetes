@@ -1,0 +1,84 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-app
+  labels:
+    name: nexus-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nexus-app
+  template:
+    metadata:
+      name: nexus-app
+      labels:
+        name: nexus-app
+    spec:
+      containers:
+        - name: nexus
+          image: sonatype/nexus3:3.29.2
+          env:
+            # - name: "INSTALL4J_ADD_VM_PARAMS"
+            #   value: "-Xms1g -Xmx1g -XX:MaxDirectMemorySize=1g"
+            - name: "MAX_HEAP"
+              value: "1024m"
+            - name: "MIN_HEAP"
+              value: "1024m"
+          ports:
+            - name: nexus-ui
+              containerPort: 8081
+            - name: nexus-reg
+              containerPort: 5000
+          volumeMounts:
+            - name: nexus-data
+              mountPath: "/nexus-data"
+      volumes:
+        - name: nexus-data
+          hostPath:
+            path: /tmp/nexus-data
+            type: Directory
+          # persistentVolumeClaim:
+          #   claimName: nexus-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-web
+  labels:
+    name: nginx-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-web
+  template:
+    metadata:
+      name: nginx-web
+      labels:
+        name: nginx-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.19.6
+          ports:
+            - name: nginx-http
+              containerPort: 8080
+            - name: nginx-https
+              containerPort: 4430
+          volumeMounts:
+            - name: nginx-config
+              mountPath: "/etc/nginx/conf.d/"
+            - name: nginx-ssl
+              mountPath: "/etc/ssl"
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-conf
+            items:
+              - key: "nexus.conf"
+                path: "default.conf"
+        - name: nginx-ssl
+          secret:
+            secretName: nexus-tls

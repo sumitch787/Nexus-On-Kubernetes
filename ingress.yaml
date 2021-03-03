@@ -1,0 +1,39 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nexus-ui
+  annotations:
+     kubernetes.io/ingress.class: "nginx"
+     kubernetes.io/tls-acme: "true"
+     #nginx.ingress.kubernetes.io/ssl-redirect: "false"
+     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+     nginx.org/client-max-body-size: "2g"
+
+spec:
+  tls:
+    - hosts:
+      - nexus.local.com
+      - nexus.docker.com
+      secretName: nexus-tls
+  rules:
+  - host: nexus.local.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-web
+            port:
+              number: 80
+  - host: nexus.docker.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-web
+            port:
+              number: 80

@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deploy
+  labels:
+    name: test-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: test-deploy
+  template:
+    metadata:
+      name: test-deploy
+      labels:
+        name: test-deploy
+    spec:
+      containers:
+        - name: test
+          image: nexus.docker.com/nginx:v2
+      imagePullSecrets:
+         - name: regcred

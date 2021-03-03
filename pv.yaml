@@ -14,4 +14,4 @@ spec:
   volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/tmp/nexus-data"
+    path: "/tmp/nexus-data-0"

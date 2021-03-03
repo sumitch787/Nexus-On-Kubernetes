@@ -16,12 +16,17 @@ spec:
       labels:
         name: nexus-app
     spec:
+      initContainers:
+        - name: changing-ownership
+          image: busybox
+          command: ["sh","-c","chown -R 200 /tmp/nexus-data-0"]
+          volumeMounts:
+            - name: nexus-data
+              mountPath: "/tmp/nexus-data-0"
       containers:
         - name: nexus
           image: sonatype/nexus3:3.29.2
           env:
-            # - name: "INSTALL4J_ADD_VM_PARAMS"
-            #   value: "-Xms1g -Xmx1g -XX:MaxDirectMemorySize=1g"
             - name: "MAX_HEAP"
               value: "1024m"
             - name: "MIN_HEAP"
@@ -31,14 +36,8 @@ spec:
               containerPort: 8081
             - name: nexus-reg
               containerPort: 5000
-          volumeMounts:
-            - name: nexus-data
-              mountPath: "/nexus-data"
       volumes:
         - name: nexus-data
-          # hostPath:
-          #   path: /tmp/nexus-data
-          #   type: DirectoryOrCreate
           persistentVolumeClaim:
             claimName: nexus-pvc
 ---
@@ -59,6 +58,13 @@ spec:
       labels:
         name: nginx-web
     spec:
+      initContainers:
+        - name: status-check
+          image: nginx:1.19.6
+          ports:
+           - name: test
+             containerPort: 8000
+          command: ["/bin/bash","-c","while true;do check=$(curl -s -o /dev/null -w \"%{http_code}\" nexus-svc-ui:8081);if [ $check == 200 ];then exit 0; fi done"]
       containers:
         - name: nginx
           image: nginx:1.19.6
@@ -79,6 +85,7 @@ spec:
             items:
               - key: "nexus.conf"
                 path: "default.conf"
+            #defaultMode: 0777    
         - name: nginx-ssl
           secret:
             secretName: nexus-tls

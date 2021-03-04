@@ -32,7 +32,7 @@ data:
         proxy_buffering    off;
 
         # allow large uploads
-        client_max_body_size 1G;
+        client_max_body_size 0;
 
         location / {
         # redirect to docker registry

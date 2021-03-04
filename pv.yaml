@@ -13,7 +13,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - worker-docker-2
+          - minikube
   storageClassName: nexus-local
   accessModes:
     - ReadWriteOnce

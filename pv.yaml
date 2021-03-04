@@ -6,6 +6,14 @@ metadata:
   labels:
     name: nexus-pv
 spec:
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - worker-docker-2
   storageClassName: nexus-local
   accessModes:
     - ReadWriteOnce

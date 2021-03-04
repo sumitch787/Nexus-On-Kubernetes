@@ -6,15 +6,6 @@ metadata:
   labels:
     name: nexus-app
 spec:
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/hostname
-            operator: In
-            values:
-            - worker-docker-2
   replicas: 1
   selector:
     matchLabels:
@@ -25,6 +16,15 @@ spec:
       labels:
         name: nexus-app
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - worker-docker-2
       initContainers:
         - name: changing-ownership
           image: busybox

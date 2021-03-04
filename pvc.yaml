@@ -16,3 +16,8 @@ spec:
   selector:
     matchLabels:
       name: nexus-pv
+    matchExpressions:
+      - key: kubernetes.io/hostname
+        operator: In
+        values:
+          - worker-docker-2
